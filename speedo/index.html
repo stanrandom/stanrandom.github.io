@@ -1,0 +1,103 @@
+<!--
+Source - https://stackoverflow.com/a/77669699
+Posted by Mr.weirdCodeDude
+Retrieved 2026-11-11, License - CC BY-SA 4.0
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>SPEED</title>
+    <script>
+        function getAccel() {
+            // Display a loading message while attempting to get accelerometer data
+            document.write("loading...");
+
+            if ("geolocation" in navigator) {
+                // Inform the user that their device supports geolocation, but there might be issues with the code
+                document.body.innerHTML =
+                    "Your device can find location but the code could be doing some funky things";
+
+                function success(position) {
+                    // Extract latitude, longitude, and speed from the geolocation data
+                    lat = position.coords.latitude;
+                    long = position.coords.longitude;
+                    speed = position.coords.speed * 2.236936;
+
+                    // Display the speed, longitude, and latitude on the webpage
+                    document.body.innerHTML =
+                        speed +
+                        " MPH" +
+                        "<br>Longitude: " +
+                        long +
+                        " -<br>Latitude: " +
+                        lat +
+                        " | ";
+                }
+
+                function error() {
+                    // If permission is not granted, fetch location based on IP address using a third-party API
+                    fetch("https://json.geoiplookup.io")
+                        .then((res) => res.text())
+                        .then((data) => {
+                            var ip = JSON.parse(data);
+                            // Display location based on IP address if precise location or speed permission is not granted
+                            document.body.innerHTML =
+                                "You did not grant permission for the script to get your precise location or speed<br>Your location based on your IP is Longitude: " +
+                                ip.longitude +
+                                " Latitude: " +
+                                ip.latitude;
+                        });
+                }
+
+                // Set options for geolocation, such as enabling high accuracy and setting a timeout
+                const options = {
+                    enableHighAccuracy: true,
+                    maximumAge: 30000,
+                    timeout: 1,
+                };
+
+                // Watch for changes in the device's position and call success or error accordingly
+                const watchID = navigator.geolocation.watchPosition(
+                    success,
+                    error,
+                    options
+                );
+            } else {
+                // Inform the user that their device cannot track location
+                document.body.innerHTML =
+                    "Your device cannot track location...<br>We're out of luck :/";
+            }
+        }
+
+        window.onload = () => {
+            // Call getAccel function when the window loads to initiate the process
+            
+            getAccel();
+            
+            // Autoclick the button to request accelerometer permissions, just in case permissions are already granted
+            document.getElementById("accelPermsButton").click();
+        };
+    </script>
+</head>
+
+<body style="background-color: lightblue">
+    <div id="main">
+        <!-- Button to initiate the process of getting accelerometer permissions -->
+        <button id="accelPermsButton" onclick="getAccel()" style="
+          position: fixed;
+          font-size: max(2.5vh, 6.5vw);
+          height: min(100vh, 100vw);
+          width: min(100vh, 100vw);
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        ">
+            Click or tap to get accelerometer permissions.
+        </button>
+    </div>
+</body>
+
+</html>
