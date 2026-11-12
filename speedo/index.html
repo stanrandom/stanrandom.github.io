@@ -24,12 +24,13 @@ Retrieved 2026-11-11, License - CC BY-SA 4.0
                     // Extract latitude, longitude, and speed from the geolocation data
                     lat = position.coords.latitude;
                     long = position.coords.longitude;
-                    speed = position.coords.speed * 2.236936;
+                    // speed = position.coords.speed * 2.236936;
+                    speed = position.coords.speed;
 
                     // Display the speed, longitude, and latitude on the webpage
                     document.body.innerHTML =
                         speed +
-                        " MPH" +
+                        " metres per second " +
                         "<br>Longitude: " +
                         long +
                         " -<br>Latitude: " +
